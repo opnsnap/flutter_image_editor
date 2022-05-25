@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:colorfilter_generator/colorfilter_generator.dart';
 import 'package:colorfilter_generator/presets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -91,6 +92,7 @@ class ImageEditor extends StatefulWidget {
 class ImageEditorState extends State<ImageEditor>
     with
         SignatureBinding,
+        FilterBinding,
         ScreenShotBinding,
         TextCanvasBinding,
         RotateCanvasBinding,
@@ -272,8 +274,7 @@ class ImageEditorState extends State<ImageEditor>
                     filter: filter,
                     valueListenable: _panelController.filterSelected,
                     onFilterSelected: (filter) {
-                      // TODO: Handle filter select
-                      print(filter);
+                      changeFilter(filter);
                     }))
                 .toList(),
           ],
@@ -358,7 +359,7 @@ class ImageEditorState extends State<ImageEditor>
       transform: Matrix4.rotationY(flipValue),
       child: Container(
         alignment: Alignment.center,
-        child: Image.file(widget.originImage),
+        child: selectedFilter.build(Image.file(widget.originImage)),
       ),
     );
   }
@@ -624,6 +625,23 @@ mixin TextCanvasBinding<T extends StatefulWidget> on State<T> {
         pointerDetach(null);
       },
     );
+  }
+}
+
+// Image filter data
+mixin FilterBinding<T extends StatefulWidget> on State<ImageEditor> {
+  late ColorFilterGenerator selectedFilter;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedFilter = PresetFilters.none;
+  }
+
+  void changeFilter(ColorFilterGenerator filter) {
+    selectedFilter = filter;
+    realState?._panelController.selectFilter(filter);
+    setState(() {});
   }
 }
 

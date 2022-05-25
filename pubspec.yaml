@@ -11,9 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  path_provider: ^2.0.1
-  image: ^3.0.0
-  screenshot: ^1.2.3
+  path_provider:
+  image:
+  screenshot:
   colorfilter_generator:
 
 dev_dependencies:

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:colorfilter_generator/colorfilter_generator.dart';
+import 'package:colorfilter_generator/presets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_editor_dove/model/float_text_model.dart';
 
@@ -24,7 +26,7 @@ class EditorPanelController {
 
   EditorPanelController() {
     colorSelected = ValueNotifier(brushColor.first.value);
-    filterSelected = ValueNotifier(0);
+    filterSelected = ValueNotifier(PresetFilters.none);
   }
 
   Size? screenSize;
@@ -67,7 +69,11 @@ class EditorPanelController {
   ];
 
   late ValueNotifier<int> colorSelected;
-  late ValueNotifier<int> filterSelected;
+  late ValueNotifier<ColorFilterGenerator> filterSelected;
+
+  void selectFilter(ColorFilterGenerator filter) {
+    filterSelected.value = filter;
+  }
 
   void selectColor(Color color) {
     colorSelected.value = color.value;

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:colorfilter_generator/colorfilter_generator.dart';
-import 'package:colorfilter_generator/presets.dart';
 
-typedef OnFilterSelected = void Function(ColorFilter filter);
+typedef OnFilterSelected = void Function(ColorFilterGenerator filter);
 
 class FilterWidget extends StatefulWidget {
   const FilterWidget(
@@ -14,7 +12,7 @@ class FilterWidget extends StatefulWidget {
       : super(key: key);
 
   final ColorFilterGenerator filter;
-  final ValueNotifier<int> valueListenable;
+  final ValueNotifier<ColorFilterGenerator> valueListenable;
   final OnFilterSelected onFilterSelected;
 
   @override
@@ -26,11 +24,9 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Tapped");
-        print(widget.filter.name);
-        // widget.onFilterSelected(selectedFilter.);
+        widget.onFilterSelected(widget.filter);
       },
-      child: ValueListenableBuilder<int>(
+      child: ValueListenableBuilder<ColorFilterGenerator>(
         valueListenable: widget.valueListenable,
         builder: (ctx, value, child) {
           return Container(
