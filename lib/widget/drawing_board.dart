@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
@@ -10,7 +8,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image/image.dart' as img;
-
 
 /// signature canvas. Controller is required, other parameters are optional.
 /// widget/canvas expands to maximum by default.
@@ -179,12 +176,10 @@ class SignaturePainter extends CustomPainter {
       ..color = _controller.penColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = _controller.penStrokeWidth;
-
   }
 
   final SignatureController _controller;
   final Paint _penStyle;
-
 
   @override
   void paint(Canvas canvas, _) {
@@ -196,8 +191,11 @@ class SignaturePainter extends CustomPainter {
     void paintMosaic(Offset center) {
       final ui.Paint paint = ui.Paint()..color = Colors.black26;
       final double size = _controller.mosaicWidth;
-      final double halfSize = size/2;
-      final ui.Rect b1 = Rect.fromCenter(center: center.translate(-halfSize, -halfSize),width: size,height: size);
+      final double halfSize = size / 2;
+      final ui.Rect b1 = Rect.fromCenter(
+          center: center.translate(-halfSize, -halfSize),
+          width: size,
+          height: size);
       //0,0
       canvas.drawRect(b1, paint);
       paint.color = Colors.grey.withOpacity(0.5);
@@ -205,7 +203,7 @@ class SignaturePainter extends CustomPainter {
       canvas.drawRect(b1.translate(0, size), paint);
       paint.color = Colors.black38;
       //0,2
-      canvas.drawRect(b1.translate(0, size*2), paint);
+      canvas.drawRect(b1.translate(0, size * 2), paint);
       paint.color = Colors.black12;
       //1,0
       canvas.drawRect(b1.translate(size, 0), paint);
@@ -214,17 +212,16 @@ class SignaturePainter extends CustomPainter {
       canvas.drawRect(b1.translate(size, size), paint);
       paint.color = Colors.black45;
       //1,2
-      canvas.drawRect(b1.translate(size, size*2), paint);
-      paint.color =  Colors.grey.withOpacity(0.5);
+      canvas.drawRect(b1.translate(size, size * 2), paint);
+      paint.color = Colors.grey.withOpacity(0.5);
       //2,0
-      canvas.drawRect(b1.translate(size*2, 0), paint);
+      canvas.drawRect(b1.translate(size * 2, 0), paint);
       paint.color = Colors.black12;
       //2,1
-      canvas.drawRect(b1.translate(size*2, size), paint);
+      canvas.drawRect(b1.translate(size * 2, size), paint);
       paint.color = Colors.black26;
       //2,2
-      canvas.drawRect(b1.translate(size*2, size*2), paint);
-
+      canvas.drawRect(b1.translate(size * 2, size * 2), paint);
     }
 
     //for draw [DrawStyle.normal]
@@ -232,17 +229,17 @@ class SignaturePainter extends CustomPainter {
       final Path path = Path();
       final Map<int, List<Point>> pathM = {};
       points.forEach((element) {
-        if(pathM[element.eventId] == null)
-          pathM[element.eventId] = [];
+        if (pathM[element.eventId] == null) pathM[element.eventId] = [];
         pathM[element.eventId]!.add(element);
       });
 
       pathM.forEach((key, value) {
         final first = value.first;
         path.moveTo(first.offset.dx, first.offset.dy);
-        if(value.length <= 3) {
+        if (value.length <= 3) {
           _penStyle.style = PaintingStyle.fill;
-          canvas.drawCircle(first.offset, _controller.penStrokeWidth,_penStyle);
+          canvas.drawCircle(
+              first.offset, _controller.penStrokeWidth, _penStyle);
           _penStyle.style = PaintingStyle.stroke;
         } else {
           value.forEach((e) {
@@ -253,26 +250,24 @@ class SignaturePainter extends CustomPainter {
       return path;
     }
 
-    switch(_controller.drawStyle) {
+    switch (_controller.drawStyle) {
       case DrawStyle.normal:
         canvas.drawPath(paintPath(), _penStyle);
         break;
       case DrawStyle.mosaic:
-      //reduce the frequency of mosaic drawing.
-        for(int i=0; i < points.length; i+=2) {
+        //reduce the frequency of mosaic drawing.
+        for (int i = 0; i < points.length; i += 2) {
           paintMosaic(points[i].offset);
         }
         break;
     }
-
   }
 
   @override
   bool shouldRepaint(CustomPainter other) => true;
 }
 
-
-enum DrawStyle{
+enum DrawStyle {
   ///use penColor
   normal,
   mosaic,
@@ -283,16 +278,16 @@ enum DrawStyle{
 /// provides signature manipulation functions (export, clear)
 class SignatureController extends ValueNotifier<List<Point>> {
   /// constructor
-  SignatureController({
-    List<Point>? points,
-    this.penColor = Colors.black,
-    this.penStrokeWidth = 3.0,
-    this.exportBackgroundColor,
-    this.onDrawStart,
-    this.onDrawMove,
-    this.onDrawEnd,
-    this.mosaicWidth = 5.0
-  }) : super(points ?? <Point>[]);
+  SignatureController(
+      {List<Point>? points,
+      this.penColor = Colors.black,
+      this.penStrokeWidth = 3.0,
+      this.exportBackgroundColor,
+      this.onDrawStart,
+      this.onDrawMove,
+      this.onDrawEnd,
+      this.mosaicWidth = 5.0})
+      : super(points ?? <Point>[]);
 
   /// color of a signature line
   final Color penColor;
@@ -431,7 +426,6 @@ class SignatureController extends ValueNotifier<List<Point>> {
     );
   }
 
-
   /// convert canvas to dart:ui Image and then to PNG represented in Uint8List
   Future<Uint8List?> toPngBytes() async {
     if (!kIsWeb) {
@@ -480,11 +474,11 @@ class SignatureController extends ValueNotifier<List<Point>> {
     final List<Point> translatedPoints = <Point>[];
     for (Point point in points) {
       translatedPoints.add(Point(
-          Offset(
-            point.offset.dx - minX + penStrokeWidth,
-            point.offset.dy - minY + penStrokeWidth,
-          ),
-          point.type,
+        Offset(
+          point.offset.dx - minX + penStrokeWidth,
+          point.offset.dy - minY + penStrokeWidth,
+        ),
+        point.type,
         point.eventId,
       ));
     }
@@ -524,35 +518,3 @@ class SignatureController extends ValueNotifier<List<Point>> {
     return Uint8List.fromList(img.encodePng(signatureImage));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

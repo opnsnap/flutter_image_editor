@@ -96,6 +96,11 @@ class DefaultImageEditorDelegate extends ImageEditorDelegate{
   }
 
   @override
+  Widget filterWidget(double limitSize, OperateType type, {required bool choosen}) {
+    return Icon(Icons.filter, size: limitSize, color: operatorStatuscolor(choosen));
+  }
+
+  @override
   Widget get resetWidget => Text('Reset', style: TextStyle(color: Colors.white, fontSize: 16));
 
   @override
@@ -186,6 +191,8 @@ abstract class ImageEditorDelegate{
         return rotateWidget(_operateBtnSize, type, choosen: choosen);
       case OperateType.mosaic:
         return mosaicWidget(_operateBtnSize, type, choosen: choosen);
+      case OperateType.filter:
+        return filterWidget(_operateBtnSize, type, choosen: choosen);
     }
   }
 
@@ -241,6 +248,9 @@ abstract class ImageEditorDelegate{
   ///Mosaic widget
   /// * for paint some mosaic on canvas.
   Widget mosaicWidget(double limitSize, OperateType type, {required bool choosen});
+
+  /// Filter widget
+  Widget filterWidget(double limitSize, OperateType type, {required bool choosen});
 
   ///Done widget
   /// * for save the edit action and generate a new image as result.

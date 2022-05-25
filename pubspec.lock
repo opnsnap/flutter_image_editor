@@ -50,6 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  colorfilter_generator:
+    dependency: "direct main"
+    description:
+      name: colorfilter_generator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   crypto:
     dependency: transitive
     description:
@@ -109,6 +116,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
+  matrix2d:
+    dependency: transitive
+    description:
+      name: matrix2d
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   meta:
     dependency: transitive
     description:
