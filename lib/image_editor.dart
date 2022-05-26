@@ -191,7 +191,7 @@ class ImageEditorState extends State<ImageEditor>
                     child: Stack(alignment: Alignment.center, children: [
                       _buildImage(),
                       _buildBrushCanvas(),
-                      //buildTextCanvas(),
+                      buildTextCanvas(),
                     ]),
                   ),
                 )),
@@ -226,13 +226,6 @@ class ImageEditorState extends State<ImageEditor>
                       child: _buildTrashCan(),
                       duration: _panelController.panelDuration);
                 }),
-            //text canvas
-            Positioned.fromRect(
-                rect: Rect.fromLTWH(0, headerHeight, screenWidth, screenHeight),
-                child: RotatedBox(
-                  quarterTurns: rotateValue,
-                  child: buildTextCanvas(),
-                )),
           ],
         ),
       ),
@@ -315,14 +308,14 @@ class ImageEditorState extends State<ImageEditor>
                     onPressed: toTextEditorPage),
                 controlBtnSpacing,
                 _buildButton(OperateType.flip, 'Flip', onPressed: flipCanvas),
-                controlBtnSpacing,
-                _buildButton(OperateType.rotated, 'Rotate',
-                    onPressed: rotateCanvasPlate),
-                controlBtnSpacing,
+                // controlBtnSpacing,
+                // _buildButton(OperateType.rotated, 'Rotate',
+                //     onPressed: rotateCanvasPlate),
                 controlBtnSpacing,
                 _buildButton(OperateType.mosaic, 'Mosaic', onPressed: () {
                   switchPainterMode(DrawStyle.mosaic);
                 }),
+                controlBtnSpacing,
                 _buildButton(OperateType.filter, 'Filter', onPressed: () {
                   // Switch to new view with filter selector
                   //
