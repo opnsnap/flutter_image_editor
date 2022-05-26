@@ -155,92 +155,87 @@ class ImageEditorState extends State<ImageEditor>
         onPointerMove: (v) {
           _panelController.pointerMoving(v);
         },
-        child: Screenshot(
-          controller: screenshotController,
-          child: Stack(
-            children: [
-              //appBar
-              ValueListenableBuilder<bool>(
-                  valueListenable: _panelController.showAppBar,
-                  builder: (ctx, value, child) {
-                    return AnimatedPositioned(
-                        top: value ? 0 : -headerHeight,
-                        left: 0,
-                        right: 0,
+        child: Stack(
+          children: [
+            //appBar
+            ValueListenableBuilder<bool>(
+                valueListenable: _panelController.showAppBar,
+                builder: (ctx, value, child) {
+                  return AnimatedPositioned(
+                      top: value ? 0 : -headerHeight,
+                      left: 0,
+                      right: 0,
+                      child: ValueListenableBuilder<bool>(
+                          valueListenable: _panelController.takeShot,
+                          builder: (ctx, value, child) {
+                            return Opacity(
+                              opacity: value ? 0 : 1,
+                              child: AppBar(
+                                iconTheme: IconThemeData(
+                                    color: Colors.white, size: 16),
+                                leading: backWidget(),
+                                backgroundColor: Colors.transparent,
+                                actions: [resetWidget(onTap: resetCanvasPlate)],
+                              ),
+                            );
+                          }),
+                      duration: _panelController.panelDuration);
+                }),
+            //canvas
+            Positioned.fromRect(
+                rect: Rect.fromLTWH(0, headerHeight, screenWidth, canvasHeight),
+                child: RotatedBox(
+                  quarterTurns: rotateValue,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Screenshot(
+                          controller: screenshotController,
+                          child: _buildImage()),
+                      _buildBrushCanvas(),
+                      //buildTextCanvas(),
+                    ],
+                  ),
+                )),
+            //bottom operation(control) bar
+            ValueListenableBuilder<bool>(
+                valueListenable: _panelController.showBottomBar,
+                builder: (ctx, value, child) {
+                  return AnimatedPositioned(
+                      bottom: value ? 0 : -bottomBarHeight,
+                      child: SizedBox(
+                        width: screenWidth,
                         child: ValueListenableBuilder<bool>(
                             valueListenable: _panelController.takeShot,
                             builder: (ctx, value, child) {
                               return Opacity(
                                 opacity: value ? 0 : 1,
-                                child: AppBar(
-                                  iconTheme: IconThemeData(
-                                      color: Colors.white, size: 16),
-                                  leading: backWidget(),
-                                  backgroundColor: Colors.transparent,
-                                  actions: [
-                                    resetWidget(onTap: resetCanvasPlate)
-                                  ],
-                                ),
+                                child: _buildControlBar(),
                               );
                             }),
-                        duration: _panelController.panelDuration);
-                  }),
-              //canvas
-              Positioned.fromRect(
-                  rect:
-                      Rect.fromLTWH(0, headerHeight, screenWidth, canvasHeight),
-                  child: RotatedBox(
-                    quarterTurns: rotateValue,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        _buildImage(),
-                        _buildBrushCanvas(),
-                        //buildTextCanvas(),
-                      ],
-                    ),
-                  )),
-              //bottom operation(control) bar
-              ValueListenableBuilder<bool>(
-                  valueListenable: _panelController.showBottomBar,
-                  builder: (ctx, value, child) {
-                    return AnimatedPositioned(
-                        bottom: value ? 0 : -bottomBarHeight,
-                        child: SizedBox(
-                          width: screenWidth,
-                          child: ValueListenableBuilder<bool>(
-                              valueListenable: _panelController.takeShot,
-                              builder: (ctx, value, child) {
-                                return Opacity(
-                                  opacity: value ? 0 : 1,
-                                  child: _buildControlBar(),
-                                );
-                              }),
-                        ),
-                        duration: _panelController.panelDuration);
-                  }),
-              //trash bin
-              ValueListenableBuilder<bool>(
-                  valueListenable: _panelController.showTrashCan,
-                  builder: (ctx, value, child) {
-                    return AnimatedPositioned(
-                        bottom: value
-                            ? _panelController.trashCanPosition.dy
-                            : -headerHeight,
-                        left: _panelController.trashCanPosition.dx,
-                        child: _buildTrashCan(),
-                        duration: _panelController.panelDuration);
-                  }),
-              //text canvas
-              Positioned.fromRect(
-                  rect:
-                      Rect.fromLTWH(0, headerHeight, screenWidth, screenHeight),
-                  child: RotatedBox(
-                    quarterTurns: rotateValue,
-                    child: buildTextCanvas(),
-                  )),
-            ],
-          ),
+                      ),
+                      duration: _panelController.panelDuration);
+                }),
+            //trash bin
+            ValueListenableBuilder<bool>(
+                valueListenable: _panelController.showTrashCan,
+                builder: (ctx, value, child) {
+                  return AnimatedPositioned(
+                      bottom: value
+                          ? _panelController.trashCanPosition.dy
+                          : -headerHeight,
+                      left: _panelController.trashCanPosition.dx,
+                      child: _buildTrashCan(),
+                      duration: _panelController.panelDuration);
+                }),
+            //text canvas
+            Positioned.fromRect(
+                rect: Rect.fromLTWH(0, headerHeight, screenWidth, screenHeight),
+                child: RotatedBox(
+                  quarterTurns: rotateValue,
+                  child: buildTextCanvas(),
+                )),
+          ],
         ),
       ),
     );
