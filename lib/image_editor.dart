@@ -186,15 +186,13 @@ class ImageEditorState extends State<ImageEditor>
                 rect: Rect.fromLTWH(0, headerHeight, screenWidth, canvasHeight),
                 child: RotatedBox(
                   quarterTurns: rotateValue,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Screenshot(
-                          controller: screenshotController,
-                          child: _buildImage()),
+                  child: Screenshot(
+                    controller: screenshotController,
+                    child: Stack(alignment: Alignment.center, children: [
+                      _buildImage(),
                       _buildBrushCanvas(),
                       //buildTextCanvas(),
-                    ],
+                    ]),
                   ),
                 )),
             //bottom operation(control) bar
